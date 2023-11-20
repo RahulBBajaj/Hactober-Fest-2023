@@ -1,0 +1,359 @@
+import java.util.*;
+public class parity{
+public static void main(String[] args) {
+String dataword1 = "1000111";
+System.out.println("For dataword: " + dataword1 + ", parity bit: " + computeParity(dataword1));
+String dataword2 = "11100";
+System.out.println("For dataword: " + dataword2 + ", parity bit: " + computeParity(dataword2));
+}
+public static int computeParity(String dataword) {
+int count = 0;
+for (int i = 0; i < dataword.length(); i++) {
+if (dataword.charAt(i) == '1') {
+count++;
+}
+}
+return (count % 2 == 0) ? 0 : 1;
+}
+}
+
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+//  2. Create a function to compute the XOR of two codewords.
+
+import java.util.Scanner;
+public class week2_2 
+{
+    public static void main(String[] arg)
+    {
+        Scanner i1=new Scanner(System.in);
+        System.out.println("Enter codewords : ");
+        xor(i1.next(),i1.next());
+        i1.close();
+    }
+    static void xor(String a,String b)
+    {
+        if(a.length()!=b.length())
+            System.out.println("-1");
+        else
+            for(int i=0;i<a.length();i++)
+                System.out.print(a.charAt(i)^b.charAt(i));
+    }
+}
+
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+import java.util.Scanner;
+public class week2_3 
+{
+    public static void main(String[] arg)
+    {
+        Scanner i1=new Scanner(System.in);
+        System.out.println("Enter m : ");
+        System.out.println("Number of redundant bits are : "+hammingR(i1.nextInt()));
+        i1.close();
+    }
+    static int hammingR(int m)
+    {
+        int r=0;
+        for(r=0;;r++)
+        {
+            if((Math.pow(2,r)-r)>=(m+1))
+                return r;
+        }
+    }
+}
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+import java.util.Scanner;
+
+public class CodewordChecker {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter codeword 1: ");
+        String codeword1 = scanner.nextLine();
+        System.out.print("Enter codeword 2: ");
+        String codeword2 = scanner.nextLine();
+        int result = codewordCheck(codeword1, codeword2);
+        System.out.println("The number of different bits is: " + result);
+    }
+
+    public static int codewordCheck(String codeword1, String codeword2) {
+        if (codeword1.equals(codeword2)) {
+            return 0;
+        } else {
+            int count = 0;
+            for (int i = 0; i < codeword1.length(); i++) {
+                if (codeword1.charAt(i) != codeword2.charAt(i)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+}
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static String xor(String a, String b) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 1; i < b.length(); i++) 
+            result.append((a.charAt(i) == b.charAt(i)) ? '0' : '1');
+        return result.toString();
+    }
+
+    public static String division(String dividend, String divisor) {
+        int pick = divisor.length();
+        String tmp = dividend.substring(0, pick);
+        for (int i = pick; i < dividend.length(); i++) 
+            tmp = (tmp.charAt(0) == '1') ? xor(divisor, tmp) + dividend.charAt(i) : xor("0".repeat(pick), tmp) + dividend.charAt(i);
+        return (tmp.charAt(0) == '1') ? xor(divisor, tmp) : xor("0".repeat(pick), tmp);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String data = getUserInput("Enter the dataword: ", sc);
+        String generator = getUserInput("Enter the CRC generator polynomial: ", sc);
+
+        String dividend = data + "0".repeat(generator.length() - 1);
+        String crc = division(dividend, generator);
+        String codeword = data + crc;
+
+        printInfo("Dataword", data);
+        printInfo("CRC Generator", generator);
+        printInfo("Dividend", dividend);
+        printInfo("CRC", crc);
+        printInfo("Codeword", codeword);
+    }
+
+    private static String getUserInput(String prompt, Scanner scanner) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
+    private static void printInfo(String label, String value) {
+        System.out.println(label + ": " + value);
+    }
+}
+
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+import java.util.Scanner;
+public class week3_2 
+{
+    public static void main(String[] ar)
+    {
+        Scanner i1=new Scanner(System.in);
+        System.out.println("Enter size of dataword : ");
+        int r=hammingR(i1.nextInt());
+        System.out.println("Number of redundant bits required for the given message are "+r);
+        bitPositions(r);
+        i1.close();
+    }
+    static int hammingR(int m)
+    {
+        // 2^r >= (m+r+1)
+        int r=0;
+        for(r=0;;r++)
+        {
+            if((Math.pow(2,r)-r) >= (m+1))
+                return r;
+        }
+    }
+    static void bitPositions(int r)
+    {
+        System.out.println("Bit positions are : ");
+        for(int i=0;i<r;i++)
+        {
+            System.out.print((int)Math.pow(2,i)+" ");
+        }
+    }
+}
+
+]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static String computeBinaryChecksum(String binaryMessage, int k) {
+        if (k <= 0) {
+            throw new IllegalArgumentException("k should be a positive integer");
+        }
+
+        int blockLength = binaryMessage.length() / k;
+        int checksum = 0;
+
+        for (int i = 0; i < k; i++) {
+            int start = i * blockLength;
+            int end = Math.min((i + 1) * blockLength, binaryMessage.length());
+            checksum += Integer.parseInt(binaryMessage.substring(start, end), 2);
+        }
+
+        return String.format("%8s", Integer.toBinaryString(~checksum & 0xFF)).replace(' ', '0');
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter a binary message: ");
+        String binaryMessage = scanner.nextLine();
+
+        System.out.print("Enter the number of blocks (k): ");
+        int k = scanner.nextInt();
+
+        String result = computeBinaryChecksum(binaryMessage, k);
+
+        System.out.println("Checksum: " + result);
+
+        scanner.close();
+    }
+}
+
+
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+
+
+//mYSERVER
+import java.io.*;
+import java.net.*;
+public class MyServer {
+public static void main(String[] args) {
+try {
+// Create the server socket without automatically binding to a port
+ServerSocket ss = new ServerSocket();
+// Bind the server socket to a specific IP address and port number
+ss.bind(new InetSocketAddress("192.168.46.246", 12345)); // Assuming port 6666. You can
+replace it with your desired port.
+// Listen for an incoming connection
+Socket s = ss.accept();
+// Read a message from the connected client
+DataInputStream dis = new DataInputStream(s.getInputStream());
+String str = (String) dis.readUTF();
+System.out.println("message= " + str);
+// Close the server socket
+ss.close();
+} catch (Exception e) {
+System.out.println(e);
+
+
+
+//MYClient
+import java.io.*;
+import java.net.*;
+public class MyClient {
+public static void main(String[] args) {
+try {
+// Specify the IP address of the server you want to connect to
+String serverIpAddress = "192.168.46.157";
+// Create a socket connection to the specified server and port (assuming port 12345 in this 
+case)
+Socket s = new Socket(serverIpAddress, 12345);
+// Create a data output stream to send data to the server
+DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+// Send a message to the server
+dout.writeUTF("Hello Server from prafull");
+// Flush and close the output stream and socket
+dout.flush();
+dout.close();
+s.close();
+} catch (Exception e) {
+System.out.println(e);
+}
+}
+
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+
+//Q. Write a UDP server and UDP client programs. List out your observations between TCP
+//and UDP based client/server socket API.
+//UDP Server
+//package UDP;
+import java.net.*;
+public class UDPServer {
+public static void main(String[] args) {
+DatagramSocket socket = null;
+try {
+// Create a UDP socket at port 12345
+socket = new DatagramSocket(1234);
+byte[] receiveData = new byte[1024];
+while (true) {
+// Receive data from the client
+DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+socket.receive(receivePacket);
+String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
+// Print received message
+System.out.println("Received from client: " + message);
+// Send a response to the client
+InetAddress clientAddress = receivePacket.getAddress();
+int clientPort = receivePacket.getPort();
+String responseMessage = "Hello, client!";
+byte[] sendData = responseMessage.getBytes();
+DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clientAddress,
+clientPort);
+socket.send(sendPacket);
+}
+} catch (Exception e) {
+e.printStackTrace();
+} finally {
+if (socket != null && !socket.isClosed()) {
+socket.close();
+}
+}
+}
+}
+
+
+///////////////////////////////////////////////////////////////////
+UDP Client
+package ComputerNetwork;
+import java.net.*;
+public class UDPClient {
+public static void main(String[] args) {
+DatagramSocket socket = null;
+try {
+// Create a UDP socket
+socket = new DatagramSocket();
+// Server address and port to send data
+InetAddress serverAddress = InetAddress.getByName("localhost");
+int serverPort = 1234;
+// Message to be sent to the server
+String message = "Hello, server!";
+byte[] sendData = message.getBytes();
+// Send the message to the server
+DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress,serverPort);
+socket.send(sendPacket);
+// Receive response from the server
+byte[] receiveData = new byte[1024];
+DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+socket.receive(receivePacket);
+String responseMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+// Print the response received from the server
+System.out.println("Received from server: " + responseMessage);
+  } catch (Exception e) {
+e.printStackTrace();
+} finally {
+if (socket != null && !socket.isClosed()) {
+socket.close();
+}
+}
+}
+}
+
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
